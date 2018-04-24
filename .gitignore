@@ -126,3 +126,6 @@ logs
 .pydevproject
 .settings/
 
+stdeb.cfg
+setup.cfg
+python-f5-openstack-agent_9.6.0-1_1404_all.deb
