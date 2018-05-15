@@ -2259,33 +2259,27 @@ class iControlDriver(LBaaSBaseDriver):
         return self.__traffic_groups[tg_index]
 
     def lic_check(self, bigip):
-        # try:
-        #     from binascii import a2b_hex
-        #     from Crypto.Cipher import DES
-        #     import time
-        #     t = time.time()
-        #     obj = DES.new('12345678')
-        #     agent_lic = self.conf.f5_agent_lic.split(',')
-        #     for lic in agent_lic:
-        #         lic_time = int(obj.decrypt(a2b_hex(lic))) / 1000000
-        #         if t < lic_time:
-        #             return True
-        #         else:
-        #             LOG.error("can't check device agent license...")
-        #             return False
-        # except Exception, e:
-        #     LOG.error("can't check device agent license...")
-        #     return False
         try:
-            sn = self.system_helper.get_serial_number(bigip).upper()
+            sn = self.system_helper.get_serial_number(bigip).upper().strip()
             lic = hashlib.md5(sn).hexdigest()[:16]
             agent_lic = self.conf.f5_agent_lic.split(',')
             if lic in agent_lic:
                 return True
             else:
-                LOG.error("can't check device agent license...")
-                return False
-        except Exception, e:
+                from binascii import a2b_hex
+                from Crypto.Cipher import DES
+                import time
+                t = time.time()
+                obj = DES.new('12345678')
+                agent_lic = self.conf.f5_agent_lic.split(',')
+                for lic in agent_lic:
+                    lic_time = int(obj.decrypt(a2b_hex(lic))) / 1000000
+                    if t < lic_time:
+                        return True
+                    else:
+                        LOG.error("can't check device agent license...")
+                        return False
+        except IOError:
             LOG.error("can't check device agent license...")
             return False
 
