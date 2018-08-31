@@ -2277,10 +2277,10 @@ class iControlDriver(LBaaSBaseDriver):
                     if t < lic_time:
                         return True
                     else:
-                        LOG.error("can't check device agent license...")
+                        # LOG.error("can't check device agent license...")
                         return False
         except IOError:
-            LOG.error("can't check device agent license...")
+            # LOG.error("can't check device agent license...")
             return False
 
     # these functions should return only active BIG-IP
